@@ -49,7 +49,3 @@ Separadores `,` ou `;` são detectados automaticamente. Campos com aspas (e aspa
 
 ```
 
-## Publicação
-
-Quer que eu abra um Pull Request com esses arquivos em `vmr-integrados/ProjetoIntegradoIV`?
-- Me informe a branch base (ex.: `main`) e eu crio a PR.
