@@ -1,161 +1,1020 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-  <title>Retrospectiva</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="./styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retrospectiva Literária 2025</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #0a0e1a 0%, #1a1430 50%, #2d1b3d 100%);
+      min-height: 100vh;
+      color: #e2e8f0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Upload Section Redesign */
+    . upload-section-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+    }
+
+    .book-icon-container {
+      width: 120px;
+      height: 120px;
+      background: rgba(34, 211, 238, 0.1);
+      border: 2px solid rgba(34, 211, 238, 0.3);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform:  translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .book-icon-container . icon {
+      font-size: 4rem;
+      filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.5));
+    }
+
+    .upload-section-wrapper h1 {
+      font-size: 3rem;
+      margin-bottom:  1.5rem;
+      background: linear-gradient(90deg, #22d3ee, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .upload-section-wrapper . subtitle {
+      font-size:  1.125rem;
+      color: #94a3b8;
+      max-width: 600px;
+      margin:  0 auto 3rem;
+      line-height: 1.6;
+    }
+
+    .upload-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .year-selector {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(71, 85, 105, 0.5);
+      color: #f8fafc;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size:  1.25rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition:  all 0.3s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%2394a3b8' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 3rem;
+    }
+
+    .year-selector:hover {
+      background-color: rgba(71, 85, 105, 0.5);
+      border-color: #22d3ee;
+    }
+
+    .upload-btn-new {
+      background: linear-gradient(135deg, #22d3ee, #a78bfa);
+      color: #0f172a;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size:  1.125rem;
+      font-weight:  600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px rgba(34, 211, 238, 0.3);
+    }
+
+    .upload-btn-new:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 30px rgba(34, 211, 238, 0.5);
+    }
+
+    .upload-btn-new . icon {
+      font-size:  1.25rem;
+    }
+
+    #csvInput {
+      display: none;
+    }
+
+    h1.dashboard-title {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, #22d3ee, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #94a3b8;
+    }
+
+    .year-display {
+      text-align: center;
+      font-size: 3rem;
+      font-weight: bold;
+      color: #f8fafc;
+      margin-bottom: 2rem;
+    }
+
+    /* Dashboard */
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(71, 85, 105, 0.5);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .metric-card . icon {
+      font-size:  1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-card .label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-card .value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #f8fafc;
+    }
+
+    . metric-card.cyan . icon { color: #22d3ee; }
+    . metric-card.purple .icon { color: #a78bfa; }
+    . metric-card.yellow .icon { color: #fbbf24; }
+    .metric-card.green .icon { color: #34d399; }
+    .metric-card.red .icon { color: #f87171; }
+    .metric-card.pink .icon { color: #f472b6; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1. 5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(71, 85, 105, 0.5);
+      color: #94a3b8;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background:  rgba(71, 85, 105, 0.5);
+    }
+
+    .tab-btn. active {
+      background: linear-gradient(135deg, #22d3ee, #a78bfa);
+      color: #0f172a;
+      border-color: transparent;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Charts Section */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    . chart-card {
+      background:  rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(71, 85, 105, 0.5);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .chart-card h3 {
+      font-size: 1rem;
+      color: #94a3b8;
+      margin-bottom: 1rem;
+    }
+
+    /* Bar Chart */
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    . bar-label {
+      width: 100px;
+      font-size: 0.875rem;
+      color: #94a3b8;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bar-container {
+      flex: 1;
+      height: 24px;
+      background: rgba(71, 85, 105, 0.3);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #0f172a;
+      min-width: 30px;
+    }
+
+    . bar-fill.cyan { background: linear-gradient(90deg, #22d3ee, #06b6d4); }
+    .bar-fill.purple { background: linear-gradient(90deg, #a78bfa, #8b5cf6); }
+    .bar-fill.green { background: linear-gradient(90deg, #34d399, #10b981); }
+    .bar-fill.yellow { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+    .bar-fill.pink { background: linear-gradient(90deg, #f472b6, #ec4899); }
+
+    /* Books List */
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .book-card {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(71, 85, 105, 0.5);
+      border-radius:  12px;
+      padding:  1rem;
+    }
+
+    .book-card . title {
+      font-weight: 600;
+      color:  #f8fafc;
+      margin-bottom: 0.25rem;
+    }
+
+    . book-card .author {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+    }
+
+    .book-card .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: #64748b;
+      flex-wrap: wrap;
+    }
+
+    .book-card .rating {
+      color: #fbbf24;
+    }
+
+    .book-card. favorite {
+      border-color: #f472b6;
+      box-shadow: 0 0 20px rgba(244, 114, 182, 0.2);
+    }
+
+    .book-card.abandoned {
+      border-color: #f87171;
+      opacity: 0.8;
+    }
+
+    /* Export Button */
+    .export-section {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(71, 85, 105, 0.5);
+    }
+
+    .export-btn {
+      background: linear-gradient(135deg, #22d3ee, #a78bfa);
+      color: #0f172a;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size:  1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .export-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Hidden canvas for export */
+    #storyCanvas {
+      display: none;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #64748b;
+    }
+
+    /* Reset Button */
+    .reset-btn {
+      background: transparent;
+      border: 1px solid #475569;
+      color: #94a3b8;
+      padding: 0.5rem 1rem;
+      border-radius:  6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .reset-btn:hover {
+      background: rgba(71, 85, 105, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .upload-section-wrapper h1 {
+        font-size: 2rem;
+      }
+
+      .upload-section-wrapper .subtitle {
+        font-size: 1rem;
+        padding: 0 1rem;
+      }
+
+      .upload-controls {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 1rem;
+      }
+
+      .year-selector,
+      .upload-btn-new {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .book-icon-container {
+        width: 100px;
+        height: 100px;
+      }
+
+      . book-icon-container .icon {
+        font-size: 3rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <div class="logo">📚</div>
-      <div class="title">
-        <h1 class="center-title">Retrospectiva</h1>
-        <p>Importe um CSV com Notas em ⭐ e meia ⭐ com 🧦</p>
+  <div class="container">
+    <!-- New Upload Section -->
+    <div id="uploadSection" class="upload-section-wrapper">
+      <div class="book-icon-container">
+        <span class="icon">📖</span>
+      </div>
+      
+      <h1>Retrospectiva Literária</h1>
+      
+      <p class="subtitle">
+        Transforme seu histórico de leituras (CSV) em visuais incríveis.  
+        Descubra seus autores favoritos, distribuição de notas e muito mais. 
+      </p>
+      
+      <div class="upload-controls">
+        <select id="yearSelector" class="year-selector">
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025" selected>2025</option>
+          <option value="2026">2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+          <option value="2029">2029</option>
+          <option value="2030">2030</option>
+        </select>
+        
+        <button class="upload-btn-new" onclick="document.getElementById('csvInput').click()">
+          <span class="icon">⬆️</span>
+          <span>Carregar CSV</span>
+        </button>
+      </div>
+      
+      <input type="file" id="csvInput" accept=".csv">
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+      <button class="reset-btn" onclick="resetApp()">← Carregar outro arquivo</button>
+
+      <h1 class="dashboard-title">Retrospectiva Literária</h1>
+      <div class="year-display" id="yearDisplay">2025</div>
+
+      <!-- Metrics -->
+      <div class="metrics-grid" id="metricsGrid"></div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="overview">Visão Geral</button>
+        <button class="tab-btn" data-tab="favorites">Favoritos</button>
+        <button class="tab-btn" data-tab="abandoned">Abandonados</button>
+        <button class="tab-btn" data-tab="all">Todos os Livros</button>
+      </div>
+
+      <!-- Tab Contents -->
+      <div id="overviewTab" class="tab-content active">
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3>Distribuição de Notas</h3>
+            <div id="ratingChart" class="bar-chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Top Autores</h3>
+            <div id="authorsChart" class="bar-chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Top Editoras</h3>
+            <div id="publishersChart" class="bar-chart"></div>
+          </div>
+        </div>
+
+        <h2>Destaques</h2>
+        <div id="highlightsGrid" class="books-grid"></div>
+      </div>
+
+      <div id="favoritesTab" class="tab-content">
+        <div id="favoritesGrid" class="books-grid"></div>
+      </div>
+
+      <div id="abandonedTab" class="tab-content">
+        <div id="abandonedGrid" class="books-grid"></div>
+      </div>
+
+      <div id="allTab" class="tab-content">
+        <div id="allBooksGrid" class="books-grid"></div>
+      </div>
+
+      <!-- Export Section -->
+      <div class="export-section">
+        <button class="export-btn" onclick="exportStory()">📸 Exportar Story (PNG)</button>
       </div>
     </div>
-    <div class="actions">
-      <label class="file-input">
-        <input id="csvInput" type="file" accept=".csv,text/csv" />
-        <span>Carregar CSV</span>
-      </label>
-      <select id="yearSelect" class="year-select" title="Selecione o ano">
-        <option value="">Todos os anos</option>
-      </select>
-      <button id="demoBtn" class="ghost">Exemplo</button>
-      <button id="downloadImageBtn" class="primary">Baixar imagem</button>
-    </div>
-  </header>
 
-  <main class="container" id="captureArea">
-    <section class="filters no-print">
-      <div class="filter-group">
-        <label>Autor</label>
-        <input type="text" id="authorFilter" placeholder="Ex.: Alyson Noel" />
-      </div>
-      <div class="filter-group">
-        <label>Editora</label>
-        <input type="text" id="publisherFilter" placeholder="Ex.: Intrínseca" />
-      </div>
-      <div class="filter-group">
-        <label>Notas (mín - máx)</label>
-        <div class="grid-2">
-          <input type="number" id="minRating" min="0" max="5" step="0.5" placeholder="0" />
-          <input type="number" id="maxRating" min="0" max="5" step="0.5" placeholder="5" />
-        </div>
-      </div>
-      <button id="applyFilters" class="primary">Aplicar filtros</button>
-      <button id="clearFilters" class="ghost">Limpar</button>
-    </section>
+    <canvas id="storyCanvas" width="1080" height="1920"></canvas>
+  </div>
 
-    <section class="summary-cards">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-icon">📊</span>
-          <h3>Total de livros</h3>
-        </div>
-        <div class="card-value" id="totalBooks">0</div>
-        <div class="card-sub">Registros filtrados</div>
-      </div>
+  <script>
+    let booksData = [];
+    let stats = {};
+    let selectedYear = 2025;
 
-      <div class="card">
-        <div class="card-header">
-          <span class="card-icon">📖</span>
-          <h3>Total de páginas</h3>
-        </div>
-        <div class="card-value" id="totalPages">0</div>
-        <div class="card-sub">Soma de páginas</div>
-      </div>
+    // CSV Parser
+    function parseCSV(text) {
+      text = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      const lines = text.split('\n').filter(l => l.trim());
+      if (! lines.length) return [];
 
-      <div class="card">
-        <div class="card-header">
-          <span class="card-icon">⚖️</span>
-          <h3>Média de páginas</h3>
-        </div>
-        <div class="card-value" id="avgPages">0</div>
-        <div class="card-sub">Por livro</div>
-      </div>
+      // Find header line
+      let headerIdx = 0;
+      for (let i = 0; i < lines. length; i++) {
+        const l = lines[i].toLowerCase();
+        if ((l.includes('titulo') || l.includes('title')) && (l.includes('autor') || l.includes('author'))) {
+          headerIdx = i;
+          break;
+        }
+      }
 
-      <div class="card">
-        <div class="card-header">
-          <span class="card-icon">⭐</span>
-          <h3>Média de notas</h3>
-        </div>
-        <div class="card-value" id="avgRating">0</div>
-        <div class="card-sub">Escala 0–5</div>
-      </div>
-    </section>
+      const header = tokenizeLine(lines[headerIdx]);
+      const headerNorm = header.map(normalize);
 
-    <section class="charts">
-      <div class="panel">
-        <div class="panel-header">
-          <h3>Distribuição de notas</h3>
-          <div class="panel-sub">Quantidade por nota</div>
-        </div>
-        <div class="panel-body">
-          <canvas id="ratingChart"></canvas>
-        </div>
-      </div>
+      const idx = {
+        titulo: findCol(headerNorm, ['titulo', 'title', 'livro']),
+        autor: findCol(headerNorm, ['autor', 'autora', 'author']),
+        editora: findCol(headerNorm, ['editora', 'publisher']),
+        paginas: findCol(headerNorm, ['paginas', 'pages', 'pag']),
+        nota: findCol(headerNorm, ['nota', 'rating', 'avaliacao', 'estrelas']),
+        favorito: findCol(headerNorm, ['favorito', 'favorite', 'fav']),
+        status: findCol(headerNorm, ['status', 'estado'])
+      };
 
-      <div class="panel">
-        <div class="panel-header">
-          <h3>Top autores</h3>
-          <div class="panel-sub">Top 10 por quantidade</div>
-        </div>
-        <div class="panel-body">
-          <canvas id="authorsChart"></canvas>
-        </div>
-      </div>
+      const books = [];
+      for (let i = headerIdx + 1; i < lines.length; i++) {
+        const cols = tokenizeLine(lines[i]);
+        if (! cols.length || cols. every(c => ! c. trim())) continue;
 
-      <div class="panel">
-        <div class="panel-header">
-          <h3>Top editoras</h3>
-          <div class="panel-sub">Top 10 por quantidade</div>
-        </div>
-        <div class="panel-body">
-          <canvas id="publishersChart"></canvas>
-        </div>
-      </div>
+        const titulo = getCol(cols, idx.titulo) || (idx.titulo < 0 ? cols[0] : '');
+        const autor = getCol(cols, idx.autor) || (idx.autor < 0 ? cols[1] : '');
+        const editora = getCol(cols, idx.editora) || '';
+        const paginasStr = getCol(cols, idx.paginas) || '';
+        const notaStr = getCol(cols, idx.nota) || '';
+        const favoritoStr = getCol(cols, idx.favorito) || '';
+        const statusStr = getCol(cols, idx.status) || '';
 
-      <div class="panel">
-        <div class="panel-header">
-          <h3>Evolução por índice</h3>
-          <div class="panel-sub">Livros ao longo da lista (1..N)</div>
-        </div>
-        <div class="panel-body">
-          <canvas id="indexSeriesChart"></canvas>
-        </div>
-      </div>
-    </section>
+        if (! titulo. trim()) continue;
 
-    <section class="cards-list">
-      <div class="panel">
-        <div class="panel-header">
-          <h3>Livros</h3>
-          <div class="panel-sub">Cards com detalhes</div>
+        const { value: nota, dnf } = parseNota(notaStr, statusStr);
+        const favorito = parseFavorito(favoritoStr);
+        const paginas = parseNumber(paginasStr);
+
+        books.push({
+          titulo: titulo.trim(),
+          autor: autor.trim(),
+          editora: editora.trim(),
+          paginas,
+          nota,
+          dnf,
+          favorito
+        });
+      }
+      return books;
+    }
+
+    function tokenizeLine(line) {
+      const out = [];
+      let cur = '';
+      let inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"') {
+          if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
+          else inQ = !inQ;
+        } else if ((c === ',' || c === ';') && !inQ) {
+          out.push(cur. trim());
+          cur = '';
+        } else {
+          cur += c;
+        }
+      }
+      out.push(cur.trim());
+      return out;
+    }
+
+    function normalize(s) {
+      return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '');
+    }
+
+    function findCol(headerNorm, names) {
+      for (const name of names) {
+        const idx = headerNorm.findIndex(h => h.includes(normalize(name)));
+        if (idx >= 0) return idx;
+      }
+      return -1;
+    }
+
+    function getCol(cols, idx) {
+      return idx >= 0 && idx < cols.length ? cols[idx] : '';
+    }
+
+    function parseNota(notaStr, statusStr) {
+      const raw = (notaStr || '').trim().toLowerCase();
+      const status = (statusStr || '').trim().toLowerCase();
+
+      // Check for DNF/Abandoned
+      if (raw.includes('abandonado') || raw === 'dnf' || raw. includes('desistido') ||
+          status.includes('abandonado') || status === 'dnf') {
+        return { value: null, dnf: true };
+      }
+
+      // Try numeric
+      const num = parseFloat(raw. replace(',', '.'));
+      if (!isNaN(num) && num >= 0 && num <= 5) {
+        return { value:  Math.round(Math.min(5, num) * 2) / 2, dnf: false };
+      }
+
+      // Try stars
+      const fullStars = (raw.match(/⭐️|⭐|★|🌟/g) || []).length;
+      const halfStars = (raw.match(/🧦|½|☆/g) || []).length;
+      let value = fullStars + 0.5 * halfStars;
+
+      if (value > 0) {
+        return { value:  Math.min(5, value), dnf: false };
+      }
+
+      return { value: null, dnf:  false };
+    }
+
+    function parseFavorito(str) {
+      const s = (str || '').trim().toLowerCase();
+      return s.includes('favorito') || s.includes('fav') || s.includes('sim') || 
+             s.includes('yes') || s.includes('true') || s.includes('1') || s.includes('x');
+    }
+
+    function parseNumber(s) {
+      if (! s) return null;
+      const n = parseFloat(s.replace(/\./g, '').replace(',', '.'));
+      return isNaN(n) ? null : n;
+    }
+
+    // Calculate Stats
+    function calculateStats(books) {
+      const completed = books.filter(b => ! b.dnf);
+      const abandoned = books.filter(b => b.dnf);
+      const favorites = books.filter(b => b.favorito);
+      const rated = completed.filter(b => b.nota !== null);
+
+      const totalBooks = completed.length;
+      const totalPages = completed.reduce((sum, b) => sum + (b.paginas || 0), 0);
+      const ratings = rated.map(b => b.nota);
+      const avgRating = ratings.length ?  (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : '-';
+      const maxRating = ratings.length ? Math.max(...ratings) : '-';
+      const minRating = ratings.length ? Math.min(...ratings) : '-';
+
+      // Rating distribution
+      const ratingDist = {};
+      ratings.forEach(r => { ratingDist[r] = (ratingDist[r] || 0) + 1; });
+
+      // Top authors
+      const authorCounts = {};
+      completed.forEach(b => {
+        if (b.autor) authorCounts[b.autor] = (authorCounts[b.autor] || 0) + 1;
+      });
+      const topAuthors = Object.entries(authorCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      // Top publishers
+      const pubCounts = {};
+      completed. forEach(b => {
+        if (b.editora) pubCounts[b.editora] = (pubCounts[b.editora] || 0) + 1;
+      });
+      const topPublishers = Object.entries(pubCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      const topPublisher = topPublishers.length ?  topPublishers[0][0] : '-';
+
+      // Highlights (top rated)
+      const highlights = [... rated]
+        .sort((a, b) => (b.nota || 0) - (a.nota || 0))
+        .slice(0, 6);
+
+      return {
+        totalBooks,
+        totalPages,
+        avgRating,
+        maxRating,
+        minRating,
+        topPublisher,
+        abandoned,
+        favorites,
+        ratingDist,
+        topAuthors,
+        topPublishers,
+        highlights,
+        allBooks: books
+      };
+    }
+
+    // Render Functions
+    function renderMetrics(stats) {
+      const grid = document.getElementById('metricsGrid');
+      grid.innerHTML = `
+        <div class="metric-card cyan">
+          <div class="icon">📖</div>
+          <div class="label">Livros lidos</div>
+          <div class="value">${stats.totalBooks}</div>
         </div>
-        <div class="panel-body" id="cardsContainer"></div>
-      </div>
-    </section>
-  </main>
+        <div class="metric-card purple">
+          <div class="icon">📄</div>
+          <div class="label">Páginas lidas</div>
+          <div class="value">${stats.totalPages. toLocaleString('pt-BR')}</div>
+        </div>
+        <div class="metric-card yellow">
+          <div class="icon">⭐</div>
+          <div class="label">Média de notas</div>
+          <div class="value">${stats.avgRating}</div>
+        </div>
+        <div class="metric-card green">
+          <div class="icon">📈</div>
+          <div class="label">Nota mais alta</div>
+          <div class="value">${stats.maxRating}</div>
+        </div>
+        <div class="metric-card red">
+          <div class="icon">📉</div>
+          <div class="label">Nota mais baixa</div>
+          <div class="value">${stats.minRating}</div>
+        </div>
+        <div class="metric-card purple">
+          <div class="icon">🏢</div>
+          <div class="label">Editora mais lida</div>
+          <div class="value" style="font-size: 1.25rem;">${stats.topPublisher}</div>
+        </div>
+        <div class="metric-card pink">
+          <div class="icon">❤️</div>
+          <div class="label">Favoritos</div>
+          <div class="value">${stats.favorites.length}</div>
+        </div>
+        <div class="metric-card red">
+          <div class="icon">🚫</div>
+          <div class="label">Abandonados</div>
+          <div class="value">${stats.abandoned.length}</div>
+        </div>
+      `;
+    }
 
-  <footer class="app-footer no-print">
-    <div>
-      <strong>Formato CSV esperado</strong>:
-      Título,Autor,Editora,Páginas,Notas (opcional: Ano)
-    </div>
-    <div class="footer-actions">
-      <a class="ghost" href="./example.csv" download>Baixar exemplo</a>
-    </div>
-  </footer>
+    function renderBarChart(container, data, colors) {
+      const maxVal = Math.max(...data.map(d => d[1]), 1);
+      container.innerHTML = data.map((d, i) => `
+        <div class="bar-item">
+          <div class="bar-label" title="${d[0]}">${d[0]}</div>
+          <div class="bar-container">
+            <div class="bar-fill ${colors[i % colors.length]}" style="width: ${(d[1] / maxVal) * 100}%">
+              ${d[1]}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
 
-  <script src="./script.js"></script>
+    function renderCharts(stats) {
+      // Rating distribution
+      const ratingData = Object.entries(stats.ratingDist)
+        .sort((a, b) => parseFloat(a[0]) - parseFloat(b[0]))
+        .map(([r, c]) => [`${r} estrelas`, c]);
+      renderBarChart(document.getElementById('ratingChart'), ratingData, ['cyan', 'purple', 'green', 'yellow', 'pink']);
+
+      // Authors
+      renderBarChart(document.getElementById('authorsChart'), stats.topAuthors, ['purple', 'cyan', 'green', 'yellow', 'pink']);
+
+      // Publishers
+      renderBarChart(document.getElementById('publishersChart'), stats.topPublishers, ['green', 'cyan', 'purple', 'yellow', 'pink']);
+    }
+
+    function renderBookCard(book, extraClass = '') {
+      const ratingStars = book.nota !== null ? '⭐'. repeat(Math.floor(book.nota)) + (book.nota % 1 ? '½' :  '') : '';
+      return `
+        <div class="book-card ${extraClass}">
+          <div class="title">${book.titulo}</div>
+          <div class="author">${book.autor || 'Autor desconhecido'}</div>
+          <div class="meta">
+            ${book.editora ? `<span>${book.editora}</span>` : ''}
+            ${book. paginas ? `<span>${book.paginas} pág. </span>` : ''}
+            ${book.nota !== null ? `<span class="rating">${ratingStars} (${book.nota})</span>` : ''}
+            ${book.dnf ? '<span style="color: #f87171;">Abandonado</span>' : ''}
+            ${book.favorito ? '<span style="color: #f472b6;">❤️ Favorito</span>' : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBooks(stats) {
+      // Highlights
+      document.getElementById('highlightsGrid').innerHTML = stats.highlights.length
+        ? stats.highlights.map(b => renderBookCard(b)).join('')
+        : '<div class="empty-state">Nenhum destaque encontrado</div>';
+
+      // Favorites
+      document.getElementById('favoritesGrid').innerHTML = stats.favorites.length
+        ? stats. favorites.map(b => renderBookCard(b, 'favorite')).join('')
+        : '<div class="empty-state">Nenhum livro favorito marcado</div>';
+
+      // Abandoned
+      document.getElementById('abandonedGrid').innerHTML = stats.abandoned.length
+        ? stats.abandoned.map(b => renderBookCard(b, 'abandoned')).join('')
+        : '<div class="empty-state">Nenhum livro abandonado</div>';
+
+      // All books
+      document.getElementById('allBooksGrid').innerHTML = stats.allBooks.map(b => 
+        renderBookCard(b, b.favorito ? 'favorite' : (b.dnf ? 'abandoned' : ''))
+      ).join('');
+    }
+
+    // Export Story
+    function exportStory() {
+      const canvas = document.getElementById('storyCanvas');
+      const ctx = canvas.getContext('2d');
+      const w = 1080;
+      const h = 1920;
+
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, w, h);
+      gradient.addColorStop(0, '#0a0e1a');
+      gradient.addColorStop(0.5, '#1a1430');
+      gradient.addColorStop(1, '#2d1b3d');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, w, h);
+
+      // Title
+      ctx.textAlign = 'center';
+      const titleGrad = ctx.createLinearGradient(0, 0, w, 0);
+      titleGrad.addColorStop(0, '#22d3ee');
+      titleGrad.addColorStop(1, '#a78bfa');
+      ctx.fillStyle = titleGrad;
+      ctx.font = 'bold 64px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText('Retrospectiva Literária', w / 2, 120);
+      ctx.font = 'bold 80px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillText(selectedYear, w / 2, 210);
+
+      // Cards
+      const cards = [
+        { icon: '📖', label: 'Livros lidos', value: stats.totalBooks, color: '#22d3ee' },
+        { icon: '📄', label: 'Páginas lidas', value: stats.totalPages. toLocaleString('pt-BR'), color: '#a78bfa' },
+        { icon: '⭐', label: 'Média de notas', value:  stats.avgRating, color: '#fbbf24' },
+        { icon: '📈', label:  'Nota mais alta', value: stats.maxRating, color: '#34d399' },
+        { icon: '📉', label: 'Nota mais baixa', value: stats.minRating, color: '#f87171' },
+        { icon:  '🏢', label: 'Editora favorita', value: stats.topPublisher, color: '#a78bfa' }
+      ];
+
+      const cardW = 460;
+      const cardH = 200;
+      const gap = 40;
+      const startX = (w - (cardW * 2 + gap)) / 2;
+      let startY = 320;
+
+      cards.forEach((card, i) => {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const x = startX + col * (cardW + gap);
+        const y = startY + row * (cardH + gap);
+
+        // Card background
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.9)';
+        ctx.beginPath();
+        ctx.roundRect(x, y, cardW, cardH, 16);
+        ctx.fill();
+
+        // Border
+        ctx.strokeStyle = 'rgba(71, 85, 105, 0.5)';
+        ctx.lineWidth = 2;
+        ctx. stroke();
+
+        // Icon and label
+        ctx.textAlign = 'left';
+        ctx.font = '28px -apple-system, sans-serif';
+        ctx.fillStyle = card.color;
+        ctx.fillText(card.icon + '  ' + card.label, x + 24, y + 50);
+
+        // Value
+        ctx.font = 'bold 56px -apple-system, sans-serif';
+        ctx.fillStyle = '#f8fafc';
+        const valStr = String(card.value).substring(0, 12);
+        ctx.fillText(valStr, x + 24, y + 140);
+      });
+
+      // Footer
+      ctx.textAlign = 'center';
+      ctx.font = '24px -apple-system, sans-serif';
+      ctx.fillStyle = '#475569';
+      ctx.fillText('GERADO VIA RETROSPECTIVA DE LEITURAS', w / 2, h - 60);
+
+      // Download
+      const link = document.createElement('a');
+      link.download = `retrospectiva-${selectedYear}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn. dataset.tab + 'Tab').classList.add('active');
+      });
+    });
+
+    // Year selector
+    document.getElementById('yearSelector').addEventListener('change', (e) => {
+      selectedYear = parseInt(e.target.value);
+    });
+
+    // File handling
+    const csvInput = document.getElementById('csvInput');
+
+    csvInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) processFile(file);
+    });
+
+    function processFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target.result;
+        booksData = parseCSV(text);
+        if (booksData.length) {
+          stats = calculateStats(booksData);
+          renderMetrics(stats);
+          renderCharts(stats);
+          renderBooks(stats);
+          document.getElementById('uploadSection').style.display = 'none';
+          document.getElementById('dashboard').classList.add('active');
+          document.getElementById('yearDisplay').textContent = selectedYear;
+          document.title = `Retrospectiva Literária ${selectedYear}`;
+        } else {
+          alert('Nenhum livro encontrado no arquivo CSV.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetApp() {
+      booksData = [];
+      stats = {};
+      document.getElementById('uploadSection').style.display = 'flex';
+      document.getElementById('dashboard').classList.remove('active');
+      csvInput.value = '';
+    }
+
+    // Add roundRect polyfill for older browsers
+    if (! CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        this.moveTo(x + r, y);
+        this.arcTo(x + w, y, x + w, y + h, r);
+        this.arcTo(x + w, y + h, x, y + h, r);
+        this.arcTo(x, y + h, x, y, r);
+        this.arcTo(x, y, x + w, y, r);
+        this.closePath();
+        return this;
+      };
+    }
+  </script>
 </body>
 </html>
