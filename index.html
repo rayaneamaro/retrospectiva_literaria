@@ -982,10 +982,18 @@
         ctx.fillStyle = card.color;
         ctx.fillText(`${card.icon}  ${card.label}`, x + cardW / 2, y + 54);
 
-        const isLongValue = card.label === 'Editora mais lida' || card.label === 'Autor(a) favorito(a)';
-        ctx.font = isLongValue ? 'bold 50px -apple-system, sans-serif' : 'bold 58px -apple-system, sans-serif';
+        const baseValue = String(card.value);
+        let valueFontSize = 58;
+        if (card.label === 'Editora mais lida' || card.label === 'Autor(a) favorito(a)') {
+          valueFontSize = 48;
+        }
+        if (baseValue.length > 15) {
+          valueFontSize = Math.min(valueFontSize, 44);
+        }
+
+        ctx.font = `bold ${valueFontSize}px -apple-system, sans-serif`;
         ctx.fillStyle = '#f8fafc';
-        const valStr = String(card.value).substring(0, 14);
+        const valStr = baseValue.length > 18 ? `${baseValue.slice(0, 17)}…` : baseValue;
         ctx.fillText(valStr, x + cardW / 2, y + 140);
       });
 
