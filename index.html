@@ -913,9 +913,9 @@
         { icon: '🏢', label: 'Editora favorita', value: stats.topPublisher, color: '#a78bfa' }
       ];
 
-      const cardW = 460;
-      const cardH = 200;
-      const gap = 40;
+      const cardW = 500;
+      const cardH = 220;
+      const gap = 32;
       const startX = (w - (cardW * 2 + gap)) / 2;
       let startY = 340;
 
@@ -967,10 +967,9 @@
       ctx.fillStyle = '#8ba3c7';
       ctx.fillText('Gerado via Retrospectiva de Leituras', w / 2, h - 120);
 
-      ctx.textAlign = 'right';
       ctx.font = '20px -apple-system, sans-serif';
       ctx.fillStyle = '#a78bfa';
-      ctx.fillText('github.com/rayaneamaro', w - 80, h - 80);
+      ctx.fillText('https://github.com/rayaneamaro', w / 2, h - 80);
 
       // Download
       const link = document.createElement('a');

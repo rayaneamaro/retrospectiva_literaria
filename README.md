@@ -1,5 +1,104 @@
 # Retrospectiva Literária
 
+Aplicação single-page em HTML/CSS/JS que transforma um CSV de leituras em um painel com métricas, destaques e exportação em PNG.
+
+## Página online
+- https://rayaneamaro.github.io/retrospctiva_literaria/
+- Mesma versão do `main`, publicada no GitHub Pages. Abra para testar upload do CSV, visualizar métricas e exportar o PNG.
+
+## Como usar
+1. Abra `index.html` em qualquer navegador moderno (sem dependências externas).
+2. Escolha o ano (afeta título e PNG exportado).
+3. Clique em "Carregar CSV" e escolha seu arquivo.
+4. Navegue pelas abas: Visão Geral (métricas + gráficos + destaques), Favoritos, Abandonados e Todos os Livros.
+5. Clique em "📸 Exportar Story (PNG)" para baixar a imagem com o link de crédito no rodapé.
+
+## Formato do CSV
+- Detecta separador `,` ou `;` e lida com BOM/CRLF e aspas/aspas escapadas.
+- Cabeçalhos aceitos (variações comuns):
+  - Título: `titulo`, `title`, `livro`
+  - Autor: `autor`, `autora`, `author`
+  - Editora: `editora`, `publisher`
+  - Páginas: `paginas`, `pages`, `pag`
+  - Nota: `nota`, `rating`, `avaliacao`, `estrelas`
+  - Favorito: `favorito`, `favorite`, `fav`
+  - Status: `status`, `estado`
+- Notas: números (0–5, passo 0.5), estrelas (`⭐`, `★`, `🌟`) e meia (`½`, `☆`, `🧦`).
+- "Abandonado"/`dnf` é detectado via nota ou status; não conta em média/total lido.
+- "Favorito" reconhece `favorito`, `fav`, `sim`, `yes`, `true`, `1`, `x`.
+
+### Exemplo
+```
+titulo,autor,editora,paginas,nota,favorito,status
+Dom Casmurro,Machado de Assis,Riachuelo,256,5,sim,
+Livro X,Autora Y,Editora Z,310,⭐⭐⭐,nao,
+Livro Z,Autor W,Editora K,200,,x,abandonado
+```
+
+## O que o painel mostra
+- Cards: livros lidos, páginas lidas, média, nota máxima, nota mínima, editora mais lida, favoritos, abandonados.
+- Gráficos de barras (nativo): distribuição de notas, top autores, top editoras.
+- Destaques: top 6 melhores notas.
+- Abas separadas: Favoritos, Abandonados, Todos.
+- Exportação PNG: gradiente profundo, cartões em glassmorphism e link do perfil no rodapé (ajuste em `exportStory()` em `index.html`).
+
+## Observações
+- O seletor de ano só altera título/PNG; para filtrar dados por ano, ajuste `calculateStats` para considerar um campo de ano no CSV.
+- A animação do ícone inicial está desativada para manter o layout estável.
+
+## Licença
+Consulte [LICENSE](LICENSE).# Retrospectiva Literária
+
+Aplicação single-page em HTML/CSS/JS que transforma um CSV de leituras em um painel com métricas, destaques e exportação em PNG.
+
+## Página online
+## Página online
+- https://rayaneamaro.github.io/retrospctiva_literaria/
+- É a mesma versão do `main`, hospedada no GitHub Pages; basta abrir para testar o fluxo de upload do CSV, ver métricas e exportar o PNG.
+
+## Como usar
+1. Abra `index.html` em qualquer navegador moderno (não há dependências externas).
+2. Selecione o ano para exibição (afeta o título e o PNG exportado).
+3. Clique em "Carregar CSV" e escolha seu arquivo.
+4. Navegue pelas abas: Visão Geral (métricas + gráficos + destaques), Favoritos, Abandonados e Todos os Livros.
+5. Clique em "📸 Exportar Story (PNG)" para baixar a imagem com assinatura no rodapé.
+
+## Formato do CSV
+- Detecta separador `,` ou `;` e lida com BOM/CRLF e aspas/aspas escapadas.
+- Cabeçalhos aceitos (variações comuns):
+  - Título: `titulo`, `title`, `livro`
+  - Autor: `autor`, `autora`, `author`
+  - Editora: `editora`, `publisher`
+  - Páginas: `paginas`, `pages`, `pag`
+  - Nota: `nota`, `rating`, `avaliacao`, `estrelas`
+  - Favorito: `favorito`, `favorite`, `fav`
+  - Status: `status`, `estado`
+- Notas: números (0–5, passo 0.5), estrelas (`⭐`, `★`, `🌟`) e meia (`½`, `☆`, `🧦`).
+- "Abandonado"/`dnf` é detectado via nota ou status; não conta em média/total lido.
+- "Favorito" reconhece `favorito`, `fav`, `sim`, `yes`, `true`, `1`, `x`.
+
+### Exemplo
+```
+titulo,autor,editora,paginas,nota,favorito,status
+Dom Casmurro,Machado de Assis,Riachuelo,256,5,sim,
+Livro X,Autora Y,Editora Z,310,⭐⭐⭐,nao,
+Livro Z,Autor W,Editora K,200,,x,abandonado
+```
+
+## O que o painel mostra
+- Cards: livros lidos, paginas lidas, média, nota máxima, nota mínima, editora mais lida, favoritos, abandonados.
+- Gráficos de barras (nativo): distribuição de notas, top autores, top editoras.
+- Destaques: top 6 melhores notas.
+- Abas separadas: Favoritos, Abandonados, Todos.
+- Exportação PNG: gradiente profundo, cartões em glassmorphism e link do repositório no rodapé (editável em `exportStory()` em `index.html`).
+
+## Observações
+- O seletor de ano só altera título/PNG; para filtrar dados por ano, ajuste `calculateStats` para considerar um campo de ano no CSV.
+- A animação do ícone inicial está desativada para manter o layout estável.
+
+## Licença
+Consulte [LICENSE](LICENSE).# Retrospectiva Literária
+
 Aplicação single-page em HTML/CSS/JS que transforma um arquivo CSV de leituras em um painel com métricas, destaques e exportação em PNG pronta para Stories.
 
 ## Como usar
