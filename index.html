@@ -708,7 +708,7 @@
       const ratingDist = {};
       ratings.forEach(r => { ratingDist[r] = (ratingDist[r] || 0) + 1; });
 
-      // Top authors
+      // Top authors (contagem)
       const authorCounts = {};
       completed.forEach(b => {
         if (b.autor) authorCounts[b.autor] = (authorCounts[b.autor] || 0) + 1;
@@ -716,6 +716,29 @@
       const topAuthors = Object.entries(authorCounts)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5);
+
+      // Autor com melhor média (apenas livros avaliados)
+      const authorRatings = {};
+      rated.forEach(b => {
+        if (!b.autor) return;
+        const cur = authorRatings[b.autor] || { sum: 0, count: 0 };
+        cur.sum += b.nota || 0;
+        cur.count += 1;
+        authorRatings[b.autor] = cur;
+      });
+      let bestAuthorName = '-';
+      let bestAuthorAvg = '-';
+      const authorEntries = Object.entries(authorRatings);
+      if (authorEntries.length) {
+        authorEntries.sort((a, b) => {
+          const avgA = a[1].sum / a[1].count;
+          const avgB = b[1].sum / b[1].count;
+          if (avgB !== avgA) return avgB - avgA;
+          return b[1].count - a[1].count; // desempate por quantidade
+        });
+        bestAuthorName = authorEntries[0][0];
+        bestAuthorAvg = (authorEntries[0][1].sum / authorEntries[0][1].count).toFixed(2);
+      }
 
       // Top publishers
       const pubCounts = {};
@@ -745,6 +768,8 @@
         ratingDist,
         topAuthors,
         topPublishers,
+        bestAuthorName,
+        bestAuthorAvg,
         highlights,
         allBooks: books
       };
@@ -783,6 +808,11 @@
           <div class="icon">🏢</div>
           <div class="label">Editora mais lida</div>
           <div class="value" style="font-size: 1.25rem;">${stats.topPublisher}</div>
+        </div>
+        <div class="metric-card cyan">
+          <div class="icon">✍️</div>
+          <div class="label">Top autor(a)</div>
+          <div class="value" style="font-size: 1.2rem;">${stats.bestAuthorName}${stats.bestAuthorAvg !== '-' ? ` (${stats.bestAuthorAvg})` : ''}</div>
         </div>
         <div class="metric-card pink">
           <div class="icon">❤️</div>
@@ -910,12 +940,13 @@
         { icon: '⭐', label: 'Média de notas', value: stats.avgRating, color: '#fbbf24' },
         { icon: '📈', label: 'Nota mais alta', value: stats.maxRating, color: '#34d399' },
         { icon: '📉', label: 'Nota mais baixa', value: stats.minRating, color: '#f87171' },
-        { icon: '🏢', label: 'Editora favorita', value: stats.topPublisher, color: '#a78bfa' }
+        { icon: '🏢', label: 'Editora mais lida', value: stats.topPublisher, color: '#a78bfa' },
+        { icon: '✍️', label: 'Top autor(a)', value: stats.bestAuthorName !== '-' ? `${stats.bestAuthorName} (${stats.bestAuthorAvg})` : '-', color: '#fbbf24' }
       ];
 
       const cardW = 420;
-      const cardH = 210;
-      const gap = 28;
+      const cardH = 200;
+      const gap = 26;
       const startX = (w - (cardW * 2 + gap)) / 2;
       let startY = 360;
 
