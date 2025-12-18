@@ -916,10 +916,6 @@
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, w, h);
 
-      // Faixa superior
-      ctx.fillStyle = 'rgba(34, 211, 238, 0.14)';
-      ctx.fillRect(160, 140, w - 320, 8);
-
       // Título
       ctx.textAlign = 'center';
       const titleGrad = ctx.createLinearGradient(0, 0, w, 0);
@@ -986,7 +982,8 @@
         ctx.fillStyle = card.color;
         ctx.fillText(`${card.icon}  ${card.label}`, x + cardW / 2, y + 54);
 
-        ctx.font = 'bold 58px -apple-system, sans-serif';
+        const isLongValue = card.label === 'Editora mais lida' || card.label === 'Autor(a) favorito(a)';
+        ctx.font = isLongValue ? 'bold 50px -apple-system, sans-serif' : 'bold 58px -apple-system, sans-serif';
         ctx.fillStyle = '#f8fafc';
         const valStr = String(card.value).substring(0, 14);
         ctx.fillText(valStr, x + cardW / 2, y + 140);
@@ -996,7 +993,7 @@
       ctx.textAlign = 'center';
       ctx.font = '22px -apple-system, sans-serif';
       ctx.fillStyle = '#8ba3c7';
-      ctx.fillText('Gerado via Retrospectiva de Leituras', w / 2, h - 120);
+      ctx.fillText('Gerado via Retrospectiva Literária', w / 2, h - 120);
 
       ctx.font = '20px -apple-system, sans-serif';
       ctx.fillStyle = '#a78bfa';
